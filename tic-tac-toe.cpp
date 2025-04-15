@@ -40,16 +40,12 @@ int get_move() {
     std::string move;
     std::cin >> move;
 
+    
     if(move.size() != 2) {
         std::cout << "invalid move" << '\n';
         return -1;
-    }else if(move[0] != 't' && move[0] != 'm' && move[0] != 'b') {
-        std::cout << "invalid move" << '\n';
-        return -1;
-    }else if(move[1] != 'l' && move[1] != 'm' && move[1] != 'r') {
-        std::cout << "invalid move" << '\n';
-        return -1;
     }
+
     switch (move[0]) {
         case 't':
         break;
@@ -58,6 +54,10 @@ int get_move() {
         break;
         case 'b':
         index+=6;
+        break;
+        default:
+            std::cout << "invalid move" << '\n';
+            return -1;
         break;
     }
 
@@ -70,6 +70,10 @@ int get_move() {
         case 'r':
         index+=2;
         break;
+        default:
+            std::cout << "invalid move" << '\n';
+            return -1;
+        break;
     }
     /*
     if ar[move] == 1 || 2 return invalid
@@ -79,6 +83,7 @@ int get_move() {
 
     return index;
 }
+
 
 void print_board(std::array<int,9> ar) {
     char pl;
