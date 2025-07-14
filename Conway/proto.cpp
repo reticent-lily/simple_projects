@@ -1,4 +1,3 @@
-
 #include "proto.h"
 
 int min(std::vector<int> vec) {
@@ -24,11 +23,17 @@ void print_game_state(std::vector<int> x, std::vector<int> y, int lip) {
     int total_column { abs(max(x) - min(x)) };
     int total_row { abs(max(y) - min(y)) };
     
-    std::cout << total_column << '\t' << total_row << std::endl;
-    for(int r = total_row; r >= min(y); r--) {
-        for(int c = min(x); c <= total_column; c++) {
+    int start_row {total_row + lip};
+    int end_row {min(y) - lip};
+    
+    int start_column {min(x) - lip};
+    int end_column {total_column + lip};
 
-            for(int i = 0; i < x.size(); i++) {
+    std::cout << total_column << '\t' << total_row << std::endl;
+    for(int r = start_row; r >= end_row; r--) {
+        for(int c = start_column; c <= end_column; c++) {
+
+            for(int i = 0; i < x.size(); i++) { // checks if position is in vector
                 if(x[i] == c && y[i] == r) {
                     std::cout << "X" << ' ';
                     //std::cout << "X" << '[' << c << r << ']' << '\t';
