@@ -15,7 +15,7 @@ int main() {
     
     InitWindow(screenWidth, screenHeight, "Conway's Game of Life");
     SetTargetFPS(60);
-    std::cout << countNeighborCells(&livingCells, livingCells[0]) << std::endl;
+    //std::cout << countNeighborCells(&livingCells, livingCells[0]) << std::endl;
 
     
     while(!WindowShouldClose()) {
