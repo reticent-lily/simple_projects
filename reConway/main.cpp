@@ -10,16 +10,21 @@ int main() {
     const int yOffset = 500; // vertical offset of the living cells
     
     // living cells
-    std::vector<cell> livingCells = {{0, 0}, {1,0}, {-1,1}, {0,1}}; 
-    
+    //std::vector<cell> livingCells = {{0, 0}, {1,-1}, {2,-1}, {2,0}, {2,1}}; 
+    std::vector<cell> livingCells = {{0, 0}, {0,2}, {1,2}, {1,1}, {1,2}, {-1,2}};
     
     InitWindow(screenWidth, screenHeight, "Conway's Game of Life");
     SetTargetFPS(60);
-    //std::cout << countNeighborCells(&livingCells, livingCells[0]) << std::endl;
+
+    countNeighborCells(&livingCells, livingCells[0]);
+    //std::cout << livingCells[0].m_LivingNeighborscCount << std::endl;
 
     
     while(!WindowShouldClose()) {
-        
+        if(IsKeyDown(KEY_RIGHT)) {
+            doConway(&livingCells);
+        }
+
         BeginDrawing();
             ClearBackground(LIGHTGRAY);
             drawLivingCells(&livingCells, xOffset, yOffset, cellDimension);
@@ -28,7 +33,7 @@ int main() {
     }
     
     CloseWindow();
-    
+    return 0;
 }
 
 //g++ main.cpp conway_func.cpp -o conway -IC:\libraries\raylib\raylib\src -LC:\libraries\raylib\raylib\src -lraylib -lopengl32 -lwinmm -lgdi32
