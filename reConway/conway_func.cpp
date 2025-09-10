@@ -1,12 +1,81 @@
 #include "conway_func.h"
 void drawLivingCells(std::vector<cell>* ptrToLivingCells, int xOffset, int yOffset, int cellDimension) {
+    cell center = {0,0};
     for(auto cell : *ptrToLivingCells) {
-        DrawRectangle(xOffset + cellDimension * cell.m_x, yOffset + cellDimension * cell.m_y, cellDimension, cellDimension, MAROON);
+        Color chose = cell == center ? MAROON : PURPLE;
+        DrawRectangle(xOffset + cellDimension * cell.m_x, yOffset + cellDimension * cell.m_y, cellDimension, cellDimension, chose);
     }
 }
 
-void countNeighborCells(std::vector<cell>* ptrToLivingCells, cell curCell) { // counts number of living neighbors around a cell, sets its neighbor count accordingly
-    //int livingNeighorsCount = 0;
+/*
+order of execution
+
+iteratethroughdead
+iteratethoughliving
+
+*/
+
+void doConway(std::vector<cell>* ptrToLivingCells) {
+    std::vector<cell> tempStorageVector {};
+
+    iterateThroughLiving(ptrToLivingCells, &tempStorageVector); // delete dead cells from living vector
+    iterateThroughDead(ptrToLivingCells, &tempStorageVector); // add dead cells to living vector
+
+    (*ptrToLivingCells) = tempStorageVector;
+}
+
+void iterateThroughLiving(std::vector<cell>* ptrToLivingCells, std::vector<cell>* tempStorageVector) {
+    // purpose of this function is decide which of the current cells live
+    /*
+    for(auto queryCell : *ptrToLivingCells){
+        countNeighborCells(ptrToLivingCells, queryCell);
+        if(queryCell.m_LivingNeighborscCount == 2 || queryCell.m_LivingNeighborscCount == 3) {
+            tempStorageVector->push_back(queryCell);
+        }
+    }*/
+    auto i = ptrToLivingCells->begin();
+    while(i != std::end(*ptrToLivingCells)) {
+
+    }
+    /*
+    for(int i = 0; i < ptrToLivingCells->size(); i++) {
+        cell queryCell = (*ptrToLivingCells)[i];
+        if(queryCell.m_LivingNeighborscCount == 2 || queryCell.m_LivingNeighborscCount == 3) {
+            continue
+        }else{
+
+        }
+    }*/
+}
+
+void iterateThroughDead(std::vector<cell>* ptrToLivingCells, std::vector<cell>* tempStorageVector) {
+    // purpose of this function is to add all neighboring cells to the living cell vector
+    std::vector<cell> directions = // a vector of local coordinates surrounding the cell
+    {
+        {-1,-1}, {-1,0}, {-1,1},
+        {0,-1}, {0,1},
+        {1,-1}, {1,0}, {1,1}
+    };
+
+    for(auto livingCell : *ptrToLivingCells) {
+        for(int i = 0; i < 8; i++) {
+            cell queryCell = livingCell + directions[i];
+            if(isCellLiving(ptrToLivingCells, queryCell)) {
+                continue;
+            }else{
+                countNeighborCells(ptrToLivingCells, queryCell);
+                if(queryCell.m_LivingNeighborscCount == 3) {
+                    tempStorageVector->push_back(queryCell);
+                    //add queryCell to vector
+                }
+            }
+        }
+        
+    }
+
+}
+
+void countNeighborCells(std::vector<cell>* ptrToLivingCells, cell& curCell) { // counts number of living neighbors around a cell, sets its neighbor count accordingly
     std::vector<cell> directions = // a vector of local coordinates surrounding the cell
     {
         {-1,-1}, {-1,0}, {-1,1},
@@ -15,33 +84,19 @@ void countNeighborCells(std::vector<cell>* ptrToLivingCells, cell curCell) { // 
     };
 
     for(int i = 0; i < 8; i++) { // iterates through the local coordinate list
-        cell search_cell = curCell + directions[i]; // actual direction of cell
+        cell queryCell = curCell + directions[i]; // world pos of cell local to living cell being radar'd
 
-        for(auto iterate_cell : *ptrToLivingCells) { // iterates through all living cells
-            std::cout << 'x' << iterate_cell.m_x << 'y' << iterate_cell.m_y << std::endl;
-            if(search_cell == iterate_cell)
-                iterate_cell.m_LivingNeighborscCount++;
-                //livingNeighorsCount++;
-        }
+        if(isCellInVector(ptrToLivingCells, queryCell))
+            curCell.m_LivingNeighborscCount++;
     }
-    //return livingNeighorsCount;
 }
 
-void iterateNeighboringCells(std::vector<cell>* ptrToDeadCells, std::vector<cell>* ptrToLivingCells) {
-    std::vector<cell> directions = // a vector of local coordinates surrounding the cell
-    {
-        {-1,-1}, {-1,0}, {-1,1},
-        {0,-1}, {0,1},
-        {1,-1}, {1,0}, {1,1}
-    };
-/*
-if deadcell is not in living cell list, add to dead cell list
-
-add all neighbors of living cells into a vector
-find all overlaps somehow?
-return vector of dead cells to add or just edit existing one
-*/
-
+bool isCellInVector(std::vector<cell>* searchVector, cell queryCell) {
+    for(auto searchCell : *searchVector) {
+        if(queryCell == searchCell)
+            return true;
+    }
+    return false;
 }
 
 bool isCellLiving(std::vector<cell>* ptrToLivingCells, cell queryCell) { // if the (query)cell we are looking at is currently living, return true
