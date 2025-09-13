@@ -1,5 +1,13 @@
 #include "conway_func.h"
 
+void prinVec(std::vector<cell>* vec) {
+    for(auto v : *vec) {
+        std::cout << '(' << v.m_x << ',' << v.m_y << ')' << '\t';
+    }
+    std::cout << std::endl;
+}
+
+
 int main() {
     const int screenWidth = 1000;
     const int screenHeight = 1000;
@@ -18,11 +26,17 @@ int main() {
 
     countNeighborCells(&livingCells, livingCells[0]);
     //std::cout << livingCells[0].m_LivingNeighborscCount << std::endl;
+    int counter = 0;
+    prinVec(&livingCells);
 
-    
     while(!WindowShouldClose()) {
-        if(IsKeyDown(KEY_RIGHT)) {
+        counter++;
+
+        if(counter > 50) {
+            std::cout << "bing" << std::endl;
             doConway(&livingCells);
+            counter = 0;
+            prinVec(&livingCells);
         }
 
         BeginDrawing();
