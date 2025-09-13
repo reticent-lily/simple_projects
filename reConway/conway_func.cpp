@@ -16,40 +16,18 @@ iteratethoughliving
 */
 
 void doConway(std::vector<cell>* ptrToLivingCells) {
-    std::vector<cell> tempStorageVector {};
+    std::vector<cell> neighbor {};
+    
+    iterateThroughDead(ptrToLivingCells, &neighbor); 
+    iterateThroughLiving(ptrToLivingCells); 
 
-    iterateThroughLiving(ptrToLivingCells, &tempStorageVector); // delete dead cells from living vector
-    iterateThroughDead(ptrToLivingCells, &tempStorageVector); // add dead cells to living vector
-
-    (*ptrToLivingCells) = tempStorageVector;
-}
-
-void iterateThroughLiving(std::vector<cell>* ptrToLivingCells, std::vector<cell>* tempStorageVector) {
-    // purpose of this function is decide which of the current cells live
-    /*
-    for(auto queryCell : *ptrToLivingCells){
-        countNeighborCells(ptrToLivingCells, queryCell);
-        if(queryCell.m_LivingNeighborscCount == 2 || queryCell.m_LivingNeighborscCount == 3) {
-            tempStorageVector->push_back(queryCell);
-        }
-    }*/
-    auto i = ptrToLivingCells->begin();
-    while(i != std::end(*ptrToLivingCells)) {
-
+    for(int i = 0; i < neighbor.size(); i++) {
+        ptrToLivingCells->push_back(neighbor[i]);
     }
-    /*
-    for(int i = 0; i < ptrToLivingCells->size(); i++) {
-        cell queryCell = (*ptrToLivingCells)[i];
-        if(queryCell.m_LivingNeighborscCount == 2 || queryCell.m_LivingNeighborscCount == 3) {
-            continue
-        }else{
-
-        }
-    }*/
 }
 
-void iterateThroughDead(std::vector<cell>* ptrToLivingCells, std::vector<cell>* tempStorageVector) {
-    // purpose of this function is to add all neighboring cells to the living cell vector
+// this function iterates through all dead neighboring cells and checks if they should come to life
+void iterateThroughDead(std::vector<cell>* ptrToLivingCells, std::vector<cell>* neighborStorageVec) {
     std::vector<cell> directions = // a vector of local coordinates surrounding the cell
     {
         {-1,-1}, {-1,0}, {-1,1},
@@ -57,15 +35,15 @@ void iterateThroughDead(std::vector<cell>* ptrToLivingCells, std::vector<cell>* 
         {1,-1}, {1,0}, {1,1}
     };
 
-    for(auto livingCell : *ptrToLivingCells) {
-        for(int i = 0; i < 8; i++) {
-            cell queryCell = livingCell + directions[i];
-            if(isCellLiving(ptrToLivingCells, queryCell)) {
+    for(auto livingCell : *ptrToLivingCells) { 
+        for(int i = 0; i < 8; i++) { // iterates through all neighboring cells
+            cell queryCell = livingCell + directions[i]; // actual position of cell
+            if(isCellLiving(ptrToLivingCells, queryCell)) { // checks if neighboring cell is living
                 continue;
             }else{
                 countNeighborCells(ptrToLivingCells, queryCell);
-                if(queryCell.m_LivingNeighborscCount == 3) {
-                    tempStorageVector->push_back(queryCell);
+                if(queryCell.m_LivingNeighborscCount == 3) { // check if the cell should live
+                    neighborStorageVec->push_back(queryCell);
                     //add queryCell to vector
                 }
             }
@@ -73,6 +51,18 @@ void iterateThroughDead(std::vector<cell>* ptrToLivingCells, std::vector<cell>* 
         
     }
 
+}
+
+void iterateThroughLiving(std::vector<cell>* ptrToLivingCells) {
+    for(int i; i < ptrToLivingCells->size(); i++) { // iterates through all living cells
+        cell A = (*ptrToLivingCells)[i];
+        countNeighborCells(ptrToLivingCells, A);
+        if(A.m_LivingNeighborscCount == 2 || A.m_LivingNeighborscCount == 3) {
+            continue;
+        }else{
+            ptrToLivingCells->erase(ptrToLivingCells->begin() + i); // erases cell from living vector
+        }
+    }
 }
 
 void countNeighborCells(std::vector<cell>* ptrToLivingCells, cell& curCell) { // counts number of living neighbors around a cell, sets its neighbor count accordingly
