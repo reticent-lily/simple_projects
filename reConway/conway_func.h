@@ -20,8 +20,8 @@ void countNeighborCells(std::vector<cell>* ptrToLivingCells, cell& curCell); // 
 bool isCellInVector(std::vector<cell>* searchVector, cell queryCell);
 
 bool isCellLiving(std::vector<cell>* ptrToLivingCells, cell queryCell);
-void iterateThroughLiving(std::vector<cell>* ptrToLivingCells, std::vector<cell>* tempStorageVector);
-void iterateThroughDead(std::vector<cell>* ptrToLivingCells, std::vector<cell>* tempStorageVector);
+void iterateThroughLiving(std::vector<cell>* ptrToLivingCells);
+void iterateThroughDead(std::vector<cell>* ptrToLivingCells, std::vector<cell>* neighborStorageVec);
 void doConway(std::vector<cell>* ptrToLivingCells);
 
 #endif
