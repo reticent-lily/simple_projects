@@ -20,23 +20,20 @@ int main() {
     // living cells
     //std::vector<cell> livingCells = {{0, 0}, {1,-1}, {2,-1}, {2,0}, {2,1}}; 
     std::vector<cell> livingCells = {{0, 0}, {0,2}, {1,2}, {1,1}, {1,2}, {-1,2}};
-    
+    int counter = 0;
+
     InitWindow(screenWidth, screenHeight, "Conway's Game of Life");
     SetTargetFPS(60);
 
-    countNeighborCells(&livingCells, livingCells[0]);
-    //std::cout << livingCells[0].m_LivingNeighborscCount << std::endl;
-    int counter = 0;
-    prinVec(&livingCells);
+    //prinVec(&livingCells);
 
     while(!WindowShouldClose()) {
         counter++;
 
         if(counter > 50) {
-            std::cout << "bing" << std::endl;
             doConway(&livingCells);
             counter = 0;
-            prinVec(&livingCells);
+            //prinVec(&livingCells);
         }
 
         BeginDrawing();
