@@ -10,21 +10,15 @@ void printDir(std::filesystem::path root) {
         }
     }
 }
-
 std::string addDirHeading( std::filesystem::path dir) {
     return "## " + dir.filename().string();
 }
 std::string formatPath(std::filesystem::path inPath) {
     return "- [[" + inPath.filename().string() + "]]";
 }
-
-std::string formatPath(std::filesystem::path inPath, std::string description) {
-    return "[[" + inPath.filename().string() + '|' + description + "]]";
-}
 std::fstream init(std::filesystem::path root, std::string outputName) {
     return std::fstream (root.append(outputName), std::ios::out);
 }
-
 void sendFile(std::filesystem::path dir, std::fstream &outputFile) {
     for(const auto& path : std::filesystem::directory_iterator{dir}) {
         if(path.path().filename().string()[0] != '.') {
@@ -38,7 +32,6 @@ void sendFile(std::filesystem::path dir, std::fstream &outputFile) {
         }
     }
 }
-
 void makeIndex(std::filesystem::path root) {
     std::fstream outputFile = init(root, "Table of Contents.md");
     
@@ -46,4 +39,5 @@ void makeIndex(std::filesystem::path root) {
 
     outputFile.close();
     
+
 }
